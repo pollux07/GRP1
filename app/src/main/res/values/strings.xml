@@ -19,4 +19,9 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="ps_title">Play Station 4</string>
+    <string name="xb_title">Xbox One</string>
+    <string name="nintendo_title">Nintendo</string>
+    <string name="nin_portable">Nintendo portatil</string>
 </resources>
