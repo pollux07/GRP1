@@ -24,4 +24,5 @@
     <string name="xb_title">Xbox One</string>
     <string name="nintendo_title">Nintendo</string>
     <string name="nin_portable">Nintendo portatil</string>
+    <string name="consoles_title">Consolas</string>
 </resources>

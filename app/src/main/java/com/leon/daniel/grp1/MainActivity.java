@@ -49,22 +49,27 @@ public class MainActivity extends AppCompatActivity
 
         //CONTENT ACTIVITY
         //ViewPager viewPagerPs = (ViewPager) findViewById(R.id.view_pager_ps);
-        ViewPager viewPagerXb = (ViewPager) findViewById(R.id.view_pager_xb);
-        ViewPager viewPagerNintendo = (ViewPager) findViewById(R.id.view_pager_nintendo);
-        ViewPager viewPagerNPortable = (ViewPager) findViewById(R.id.view_pager_nintendo_portable);
-
-        TextView psTitle = (TextView) findViewById(R.id.tv_ps_title);
-        psTitle.setText(getString(R.string.ps_title));
 
         int[] gamesPs = new int[] {R.drawable.ff_xv_ps4, R.drawable.horizon_zero_dawn_ps4,
                 R.drawable.mgv_ps4, R.drawable.last_of_us_ps4, R.drawable.persona_5_ps4};
-        int[] gamesXbO = new int[] {R.drawable.ac_ezio_xbo, R.drawable.destiny_2_xbo,
+        int[] gamesXb = new int[] {R.drawable.ac_ezio_xbo, R.drawable.destiny_2_xbo,
                 R.drawable.gears_of_war_4_xbo, R.drawable.halo_5_xbo, R.drawable.quantum_break_xbo};
+        int[] gamesSwitch = new int[] {R.drawable.pokken_tournament_dx_switch,
+                R.drawable.super_mario_odyssey_switch, R.drawable.zelda_breath_of_the_wild_switch,
+                R.drawable.splatton2_switch, R.drawable.mario_kart8_deluxe_switch};
+        int[] gamesNPortable = new int[] {R.drawable.pokemon_ultra_sun_n3ds,
+                R.drawable.pokemon_ultra_moon_3ds, R.drawable.monster_hunter_generation_3ds,
+                R.drawable.super_smash_bros_3ds};
+        int[] gamesConsoles = new int[] {R.drawable.ps4_bundle, R.drawable.ps4_pro_bundle,
+                R.drawable.ps_vr, R.drawable.xbox_one_s, R.drawable.xbox_one_x,
+                R.drawable.xbox_ones_gears_war4_bundle, R.drawable.switch_splatoon};
 
         mPsPagerAdapter = new PsPagerAdapter(mCtx, gamesPs);
         //viewPagerPs.setAdapter(mPsPagerAdapter);
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.linear_ps);
+        TextView psTitle = (TextView) findViewById(R.id.tv_ps_title);
+        psTitle.setText(getString(R.string.ps_title));
+        LinearLayout layoutPs = (LinearLayout) findViewById(R.id.linear_ps);
         for (int i = 0; i < gamesPs.length; i++) {
             ImageView imageView = new ImageView(this);
             imageView.setId(i);
@@ -72,15 +77,60 @@ public class MainActivity extends AppCompatActivity
             Picasso.with(mCtx)
                     .load(gamesPs[i])
                     .into(imageView);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-            layout.addView(imageView);
+            layoutPs.addView(imageView);
         }
 
+        TextView xbTitle = (TextView) findViewById(R.id.tv_xb_title);
+        xbTitle.setText(getString(R.string.xb_title));
+        LinearLayout layoutXb = (LinearLayout) findViewById(R.id.linear_xb);
+        for (int i = 0; i < gamesXb.length; i++) {
+            ImageView imageView = new ImageView(this);
+            imageView.setId(i);
+            imageView.setPadding(15, 15, 15, 15);
+            Picasso.with(mCtx)
+                    .load(gamesXb[i])
+                    .into(imageView);
+            layoutXb.addView(imageView);
+        }
+
+        TextView switchTitle = (TextView) findViewById(R.id.tv_nintendo_title);
+        switchTitle.setText(getString(R.string.nintendo_title));
+        LinearLayout layoutNintendo = (LinearLayout) findViewById(R.id.linear_nintendo);
+        for (int i = 0; i < gamesSwitch.length; i++) {
+            ImageView imageView = new ImageView(this);
+            imageView.setId(i);
+            imageView.setPadding(15, 15, 15, 15);
+            Picasso.with(mCtx)
+                    .load(gamesSwitch[i])
+                    .into(imageView);
+            layoutNintendo.addView(imageView);
+        }
+
+        TextView nPortableTitle = (TextView) findViewById(R.id.tv_nportable_title);
+        nPortableTitle.setText(getString(R.string.nin_portable));
+        LinearLayout layoutPortableN = (LinearLayout) findViewById(R.id.linear_nportable);
+        for (int i = 0; i < gamesNPortable.length; i++) {
+            ImageView imageView = new ImageView(this);
+            imageView.setId(i);
+            imageView.setPadding(15, 15, 15, 15);
+            Picasso.with(mCtx)
+                    .load(gamesNPortable[i])
+                    .into(imageView);
+            layoutPortableN.addView(imageView);
+        }
+
+        TextView consolesTitle = (TextView) findViewById(R.id.tv_consoles_title);
+        consolesTitle.setText(getString(R.string.consoles_title));
+        LinearLayout layoutConsoles = (LinearLayout) findViewById(R.id.linear_consoles);
+        for (int i = 0; i < gamesConsoles.length; i++) {
+            ImageView imageView = new ImageView(this);
+            imageView.setId(i);
+            imageView.setPadding(15, 15, 15, 15);
+            Picasso.with(mCtx)
+                    .load(gamesConsoles[i])
+                    .into(imageView);
+            layoutConsoles.addView(imageView);
+        }
     }
 
     @Override
