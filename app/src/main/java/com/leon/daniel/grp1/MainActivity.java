@@ -20,14 +20,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.rd.PageIndicatorView;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Context mCtx;
+    ScrollView mScrollMain;
     PsPagerAdapter mPsPagerAdapter;
 
     @Override
@@ -48,7 +51,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //CONTENT ACTIVITY
-        //ViewPager viewPagerPs = (ViewPager) findViewById(R.id.view_pager_ps);
+        mScrollMain = (ScrollView) findViewById(R.id.main_scrollview);
+        mScrollMain.setVisibility(View.VISIBLE);
+        ViewPager viewPagerPromos = (ViewPager) findViewById(R.id.games_promo_vp);
+        PageIndicatorView pageIndicator = (PageIndicatorView) findViewById(R.id.page_inidcater_promo);
+
+        int[] promGames = new int[] {R.drawable.resident_evil7_gold_edition_promo,
+                R.drawable.spiderman_promo, R.drawable.days_gone_promo_ps4,
+                R.drawable.detroit_become_human_promo, R.drawable.death_stranding_promo,
+                R.drawable.anthem_promo};
 
         int[] gamesPs = new int[] {R.drawable.ff_xv_ps4, R.drawable.horizon_zero_dawn_ps4,
                 R.drawable.mgv_ps4, R.drawable.last_of_us_ps4, R.drawable.persona_5_ps4};
@@ -64,8 +75,10 @@ public class MainActivity extends AppCompatActivity
                 R.drawable.ps_vr, R.drawable.xbox_one_s, R.drawable.xbox_one_x,
                 R.drawable.xbox_ones_gears_war4_bundle, R.drawable.switch_splatoon};
 
-        mPsPagerAdapter = new PsPagerAdapter(mCtx, gamesPs);
-        //viewPagerPs.setAdapter(mPsPagerAdapter);
+        mPsPagerAdapter = new PsPagerAdapter(mCtx, promGames);
+        viewPagerPromos.setAdapter(mPsPagerAdapter);
+
+        pageIndicator.setViewPager(viewPagerPromos);
 
         TextView psTitle = (TextView) findViewById(R.id.tv_ps_title);
         psTitle.setText(getString(R.string.ps_title));
