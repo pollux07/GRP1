@@ -1,28 +1,27 @@
 package com.leon.daniel.grp1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.leon.daniel.grp1.Utils.Common;
+import com.leon.daniel.grp1.Utils.PsPagerAdapter;
+import com.leon.daniel.grp1.Utils.VolleySingelton;
 import com.rd.PageIndicatorView;
 import com.squareup.picasso.Picasso;
 
@@ -37,9 +36,21 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        VolleySingelton.getInstance(getApplicationContext());
         mCtx = this;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        String userId = Common.getPreference(mCtx, Common.USER_ID, null);
+        if (null == userId) {
+            Intent loginIntent = new Intent(mCtx, LoginActivity.class);
+            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
+            overridePendingTransition(0, 0);
+
+            startActivity(loginIntent);
+            overridePendingTransition(0, 0);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -90,6 +101,12 @@ public class MainActivity extends AppCompatActivity
             Picasso.with(mCtx)
                     .load(gamesPs[i])
                     .into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //infoGameAction(int idGame[i]);
+                }
+            });
             layoutPs.addView(imageView);
         }
 
@@ -103,6 +120,12 @@ public class MainActivity extends AppCompatActivity
             Picasso.with(mCtx)
                     .load(gamesXb[i])
                     .into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //infoGameAction(int idGame[i]);
+                }
+            });
             layoutXb.addView(imageView);
         }
 
@@ -116,6 +139,12 @@ public class MainActivity extends AppCompatActivity
             Picasso.with(mCtx)
                     .load(gamesSwitch[i])
                     .into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //infoGameAction(int idGame[i]);
+                }
+            });
             layoutNintendo.addView(imageView);
         }
 
@@ -129,6 +158,12 @@ public class MainActivity extends AppCompatActivity
             Picasso.with(mCtx)
                     .load(gamesNPortable[i])
                     .into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //infoGameAction(int idGame[i]);
+                }
+            });
             layoutPortableN.addView(imageView);
         }
 
@@ -142,9 +177,21 @@ public class MainActivity extends AppCompatActivity
             Picasso.with(mCtx)
                     .load(gamesConsoles[i])
                     .into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //infoGameAction(int idGame[i]);
+                }
+            });
             layoutConsoles.addView(imageView);
         }
     }
+
+    private void infoGameAction(){
+        Intent infoGameIntent = new Intent(mCtx, InfoGamesActivity.class);
+        startActivity(infoGameIntent);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -184,18 +231,18 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (id) {
+            case R.id.nav_camera:
+                break;
+            case R.id.nav_gallery:
+                break;
+            case R.id.nav_slideshow:
+                break;
+            case R.id.nav_manage:
+                break;
+            case R.id.nav_share:
+                break;
+            case R.id.nav_send:
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

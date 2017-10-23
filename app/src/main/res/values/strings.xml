@@ -1,16 +1,17 @@
 <resources>
-    <string name="app_name">GRP1</string>
+    <string name="app_name">Game Show </string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">Inicio de sesión</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="prompt_user_email">Usuario ó Correo</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Aceptar</string>
+    <string name="register_action"><u>Registrate</u></string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -26,7 +27,6 @@
     <string name="nin_portable">Nintendo portatil</string>
     <string name="consoles_title">Consolas</string>
     <string name="promo_games">promocionales</string>
-    <string name="title_activity_info_games">InfoGamesActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -116,4 +116,10 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="registration_activity_title">Registrate</string>
+    <string name="name">Nombre(s)</string>
+    <string name="last_name">Apellido(s)</string>
+    <string name="email">Correo</string>
+    <string name="phone">Teléfono</string>
+    <string name="celphone">Celular (opcional)</string>
 </resources>

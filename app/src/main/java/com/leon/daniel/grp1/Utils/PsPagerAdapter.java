@@ -1,4 +1,4 @@
-package com.leon.daniel.grp1;
+package com.leon.daniel.grp1.Utils;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.leon.daniel.grp1.R;
 import com.squareup.picasso.Picasso;
 
 /**

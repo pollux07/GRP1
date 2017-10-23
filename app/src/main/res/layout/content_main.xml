@@ -36,7 +36,7 @@
                 attrs:piv_padding="12dp"
                 attrs:piv_radius="4dp"
                 app:piv_interactiveAnimation="true"
-                app:piv_animationType="worm"/>
+                app:piv_animationType="drop"/>
         </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
