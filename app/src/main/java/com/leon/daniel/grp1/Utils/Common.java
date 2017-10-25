@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 
 public class Common {
     public static final String LOG_TAG = "GSPROTO";
+    public static final int RESPONSE_OK = 200;
+
     public static final String USERMAIL = "usermail";
     public static final String USER_ID = "user_id";
 

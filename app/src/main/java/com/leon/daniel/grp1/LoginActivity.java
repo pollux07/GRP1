@@ -30,11 +30,19 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.leon.daniel.grp1.Utils.Common;
 import com.leon.daniel.grp1.Utils.VolleySingelton;
+import com.leon.daniel.grp1.Utils.WebService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -145,12 +153,69 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * El usuario inicara el proceso de registro si aun no tiene una cuenta dada de alta
      */
     private void registrationDialog() {
+        boolean cancel = false;
+        View focusView = null;
+
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mCtx);
         alertBuilder.setView(R.layout.registration_dialog);
-        alertBuilder.setTitle("Registrate");
 
         final AlertDialog dialog = alertBuilder.create();
         dialog.show();
+        EditText usernameEt = (EditText) dialog.findViewById(R.id.et_username);
+        EditText emailEt = (EditText) dialog.findViewById(R.id.et_email);
+        EditText passEt = (EditText) dialog.findViewById(R.id.et_psw);
+        EditText confirmPswEt = (EditText) dialog.findViewById(R.id.et_confirm_psw);
+        Button registerBtn = (Button) dialog.findViewById(R.id.btn_register);
+        assert usernameEt != null;
+        assert emailEt != null;
+        assert passEt != null;
+        assert confirmPswEt != null;
+        assert registerBtn != null;
+        String pwd = passEt.getText().toString();
+        String confirmPwd = confirmPswEt.getText().toString();
+        if (pwd.equals(confirmPwd)) {
+            final Map<String, String> params = new HashMap<>();
+            params.put("username", usernameEt.getText().toString());
+            params.put("email", emailEt.getText().toString());
+            params.put("pwd", pwd);
+            registerBtn.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    registrationAction(params);
+                    dialog.dismiss();
+                }
+            });
+        } else {
+            confirmPswEt.setError(getString(R.string.different_psw));
+            focusView = confirmPswEt;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+        }
+    }
+
+    private void registrationAction(Map<String, String> params) {
+        WebService.registration(mCtx, params, new WebService.RequestListener() {
+            @Override
+            public void onSucces(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    int code = jsonResponse.getInt("code");
+                    if (code == Common.RESPONSE_OK) {
+                        Toast.makeText(mCtx, "Registro exitoso", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError() {
+                Toast.makeText(mCtx, "Error de comunicaciones", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**

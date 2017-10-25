@@ -10,8 +10,8 @@
     <!-- Strings related to login -->
     <string name="prompt_user_email">Usuario ó Correo</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Aceptar</string>
-    <string name="register_action"><u>Registrate</u></string>
+    <string name="action_accept">Aceptar</string>
+    <string name="register_action">Registrate</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -122,4 +122,7 @@
     <string name="email">Correo</string>
     <string name="phone">Teléfono</string>
     <string name="celphone">Celular (opcional)</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="confirm_password">Confirmar password</string>
+    <string name="different_psw">El password no coinside</string>
 </resources>
