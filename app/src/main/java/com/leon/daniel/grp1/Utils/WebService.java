@@ -20,7 +20,7 @@ import java.util.Map;
  */
 
 public class WebService {
-    private static String URL_DEF = "http://www.pollux792.000webhostapp.com/ws/gs/1.0";
+    private static String URL_DEF = "http://pollux792.000webhostapp.com/public_html";
     private static int DEFAULT_TIME = 40000;
 
     public interface RequestListener {
@@ -31,7 +31,7 @@ public class WebService {
     public static void registration(Context context,
                                     final Map<String, String> params,
                                     final RequestListener requestListener) {
-        String url = String.format("%s/registration", URL_DEF);
+        String url = String.format("%s/conect.php", URL_DEF);
         StringRequest registrationAction = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

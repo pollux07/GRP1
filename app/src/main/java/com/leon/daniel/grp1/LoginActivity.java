@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -161,12 +162,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         final AlertDialog dialog = alertBuilder.create();
         dialog.show();
-        EditText usernameEt = (EditText) dialog.findViewById(R.id.et_username);
-        EditText emailEt = (EditText) dialog.findViewById(R.id.et_email);
-        EditText passEt = (EditText) dialog.findViewById(R.id.et_psw);
-        EditText confirmPswEt = (EditText) dialog.findViewById(R.id.et_confirm_psw);
+        TextInputEditText emailEt = (TextInputEditText) dialog.findViewById(R.id.et_email);
+        TextInputEditText passEt = (TextInputEditText) dialog.findViewById(R.id.et_psw);
+        TextInputEditText confirmPswEt = (TextInputEditText) dialog.findViewById(R.id.et_confirm_psw);
         Button registerBtn = (Button) dialog.findViewById(R.id.btn_register);
-        assert usernameEt != null;
         assert emailEt != null;
         assert passEt != null;
         assert confirmPswEt != null;
@@ -175,7 +174,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         String confirmPwd = confirmPswEt.getText().toString();
         if (pwd.equals(confirmPwd)) {
             final Map<String, String> params = new HashMap<>();
-            params.put("username", usernameEt.getText().toString());
             params.put("email", emailEt.getText().toString());
             params.put("pwd", pwd);
             registerBtn.setOnClickListener(new OnClickListener() {

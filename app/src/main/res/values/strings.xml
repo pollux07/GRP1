@@ -8,7 +8,7 @@
     <string name="title_activity_login">Inicio de sesión</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_user_email">Usuario ó Correo</string>
+    <string name="prompt_user_email">Correo</string>
     <string name="prompt_password">Password</string>
     <string name="action_accept">Aceptar</string>
     <string name="register_action">Registrate</string>
