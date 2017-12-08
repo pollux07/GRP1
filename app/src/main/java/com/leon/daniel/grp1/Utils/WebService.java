@@ -20,7 +20,7 @@ import java.util.Map;
  */
 
 public class WebService {
-    private static String URL_DEF = "http://pollux792.000webhostapp.com/public_html";
+    private static String URL_DEF = "10.0.2.2/ws/gs/1.0";
     private static int DEFAULT_TIME = 40000;
 
     public interface RequestListener {
@@ -31,7 +31,7 @@ public class WebService {
     public static void registration(Context context,
                                     final Map<String, String> params,
                                     final RequestListener requestListener) {
-        String url = String.format("%s/conect.php", URL_DEF);
+        String url = String.format("%s/registration", URL_DEF);
         StringRequest registrationAction = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -56,6 +56,36 @@ public class WebService {
         registrationAction.setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIME,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingelton.getInstance(context).addToRequestQueue(registrationAction);
+    }
+
+    public static void login(final Context context,
+                                   final Map<String, String> params,
+                                   final RequestListener requestListener) {
+        String url = String.format("%s/login", URL_DEF);
+        StringRequest loginAction = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (!isExpectedJson(response)) {
+                    requestListener.onError();
+                }
+
+                requestListener.onSucces(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                requestListener.onError();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return params;
+            }
+        };
+
+        loginAction.setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIME,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        VolleySingelton.getInstance(context).addToRequestQueue(loginAction);
     }
 
     private static boolean isExpectedJson(String response){

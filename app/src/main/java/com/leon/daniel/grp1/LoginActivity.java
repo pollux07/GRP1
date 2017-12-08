@@ -3,7 +3,9 @@ package com.leon.daniel.grp1;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
@@ -195,6 +197,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void registrationAction(Map<String, String> params) {
+        final ProgressDialog dialog = new ProgressDialog(mCtx);
+        dialog.setMessage("Cargando");
+        dialog.show();
         WebService.registration(mCtx, params, new WebService.RequestListener() {
             @Override
             public void onSucces(String response) {
@@ -202,15 +207,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     JSONObject jsonResponse = new JSONObject(response);
                     int code = jsonResponse.getInt("code");
                     if (code == Common.RESPONSE_OK) {
+                        dialog.dismiss();
                         Toast.makeText(mCtx, "Registro exitoso", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    dialog.dismiss();
                 }
             }
 
             @Override
             public void onError() {
+                dialog.dismiss();
                 Toast.makeText(mCtx, "Error de comunicaciones", Toast.LENGTH_SHORT).show();
             }
         });
@@ -259,8 +267,46 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
+
+            Map<String, String> params = new HashMap<>();
+            params.put("email", email);
+            params.put("pwd", password);
+            loginAction(params);
+
         }
+    }
+
+    private void loginAction(Map<String, String> params) {
+        showProgress(true);
+        WebService.login(mCtx, params, new WebService.RequestListener() {
+            @Override
+            public void onSucces(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    int code = jsonResponse.getInt("code");
+                    if (code == Common.RESPONSE_OK) {
+                        String userId = jsonResponse.getString("user_id");
+                        Common.putPreference(mCtx, Common.USER_ID, userId);
+
+                        showProgress(false);
+
+                        Intent mainIntent = new Intent(mCtx, MainActivity.class);
+                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        startActivity(mainIntent);
+                        finish();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(mCtx, "Error de comunicaciones", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError() {
+                showProgress(false);
+                Toast.makeText(mCtx, "Error de comunicaciones", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private boolean isEmailValid(String email) {
