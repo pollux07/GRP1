@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -74,7 +75,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         VolleySingelton.getInstance(getApplicationContext());
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.usermail);
-        populateAutoComplete();
+
+        if (null != Common.getPreference(mCtx, Common.USER_EMAIL, null)) {
+            mEmailView.setText(Common.getPreference(mCtx, Common.USER_EMAIL, null));
+        }
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -109,36 +113,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
     /**
      * Callback received when a permissions request has been completed.
      */
@@ -147,7 +121,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
+
             }
         }
     }
@@ -164,23 +138,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         final AlertDialog dialog = alertBuilder.create();
         dialog.show();
-        TextInputEditText emailEt = (TextInputEditText) dialog.findViewById(R.id.et_email);
-        TextInputEditText passEt = (TextInputEditText) dialog.findViewById(R.id.et_psw);
+        final TextInputEditText emailEt = (TextInputEditText) dialog.findViewById(R.id.et_email);
+        final TextInputEditText passEt = (TextInputEditText) dialog.findViewById(R.id.et_psw);
         TextInputEditText confirmPswEt = (TextInputEditText) dialog.findViewById(R.id.et_confirm_psw);
         Button registerBtn = (Button) dialog.findViewById(R.id.btn_register);
         assert emailEt != null;
         assert passEt != null;
         assert confirmPswEt != null;
         assert registerBtn != null;
-        String pwd = passEt.getText().toString();
+        final String pass = passEt.getText().toString();
         String confirmPwd = confirmPswEt.getText().toString();
-        if (pwd.equals(confirmPwd)) {
-            final Map<String, String> params = new HashMap<>();
-            params.put("email", emailEt.getText().toString());
-            params.put("pwd", pwd);
+        if (pass.equals(confirmPwd)) {
             registerBtn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String email = emailEt.getText().toString();
+                    String pwd = passEt.getText().toString();
+                    Log.d(Common.LOG_TAG, "PASSWORD: " + pwd);
+                    final Map<String, String> params = new HashMap<>();
+                    params.put("email", email);
+                    params.put("pwd", pwd);
                     registrationAction(params);
                     dialog.dismiss();
                 }
@@ -206,9 +183,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
                     int code = jsonResponse.getInt("code");
-                    if (code == Common.RESPONSE_OK) {
+                    String status= jsonResponse.getString("status");
+                    if (code == Common.RESPONSE_OK && status.equals(Common.OK_STATUS)) {
                         dialog.dismiss();
                         Toast.makeText(mCtx, "Registro exitoso", Toast.LENGTH_SHORT).show();
+                    } else if (code == Common.RESPONSE_OK && status.equals(Common.USER_EXISTS_STATUS)) {
+                        dialog.dismiss();
+                        Toast.makeText(mCtx, "Este correo ya esta registrado", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -261,32 +242,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-
-            Map<String, String> params = new HashMap<>();
-            params.put("email", email);
-            params.put("pwd", password);
-            loginAction(params);
+            loginAction(email, password);
 
         }
     }
 
-    private void loginAction(Map<String, String> params) {
+    private void loginAction(final String email, String password) {
         showProgress(true);
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("pwd", password);
         WebService.login(mCtx, params, new WebService.RequestListener() {
             @Override
             public void onSucces(String response) {
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
                     int code = jsonResponse.getInt("code");
-                    if (code == Common.RESPONSE_OK) {
-                        String userId = jsonResponse.getString("user_id");
-                        Common.putPreference(mCtx, Common.USER_ID, userId);
+                    String status= jsonResponse.getString("status");
+                    if (code == Common.RESPONSE_OK && status.equals(Common.OK_STATUS)) {
+                        int userId = jsonResponse.getInt("user_id");
+
+                        Common.putPreference(mCtx, Common.USER_ID, String.format("%s", userId));
+                        Common.putPreference(mCtx, Common.USER_EMAIL, String.format("%s", email));
 
                         showProgress(false);
 
@@ -294,9 +273,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         startActivity(mainIntent);
                         finish();
+
+                    } else if (code == Common.RESPONSE_OK && status.equals(Common.USER_NOT_FOUND_STATUS)) {
+                        showProgress(false);
+                        Toast.makeText(mCtx, "Credenciales inválidas", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    showProgress(false);
                     Toast.makeText(mCtx, "Error de comunicaciones", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -310,12 +294,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 

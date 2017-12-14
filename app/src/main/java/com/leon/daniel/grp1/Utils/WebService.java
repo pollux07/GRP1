@@ -19,8 +19,12 @@ import java.util.Map;
  * Creado por Pollux.
  */
 
+/**
+ * Web service que realiza la conexion asincrona a un servidor remoto o local por medio
+ * de la libreria VolleySingelton.
+ */
 public class WebService {
-    private static String URL_DEF = "10.0.2.2/ws/gs/1.0";
+    private static String URL_DEF = "http://192.168.0.84/ws/gs/1.0";
     private static int DEFAULT_TIME = 40000;
 
     public interface RequestListener {
@@ -28,6 +32,14 @@ public class WebService {
         void onError();
     }
 
+    /**
+     * Método que realiza la llamada al Web Service de registro para poder dar de alta a un usuario
+     * que no se encuentra registrado en la base de datos mandando como parametros
+     * Correo y Contraseña.
+     * @param context contexto de la actividad que lo esta mandando a llamar.
+     * @param params parametros que se enviaran al web service (email, password).
+     * @param requestListener el resultado que nos arroja el web service.
+     */
     public static void registration(Context context,
                                     final Map<String, String> params,
                                     final RequestListener requestListener) {
@@ -58,6 +70,13 @@ public class WebService {
         VolleySingelton.getInstance(context).addToRequestQueue(registrationAction);
     }
 
+    /**
+     * Método que realiza el inicio de sesión de un usuario por medio de su correo y contraseña
+     * enviando como resultado la existencia de dicho correo en la base de datos.
+     * @param context contexto de la actividad que lo esta mandando a llamar.
+     * @param params parametros que se enviaran al web service (email, password).
+     * @param requestListener el resultado que nos arroja el web service.
+     */
     public static void login(final Context context,
                                    final Map<String, String> params,
                                    final RequestListener requestListener) {
@@ -86,6 +105,42 @@ public class WebService {
         loginAction.setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIME,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingelton.getInstance(context).addToRequestQueue(loginAction);
+    }
+
+    /**
+     * Método que se encarga de cargar los datos del perfil del usuario por medio de su ID único
+     * @param context contexto de la actividad que lo esta mandando a llamar.
+     * @param params parametros que se enviaran al web service (email, password).
+     * @param requestListener el resultado que nos arroja el web service.
+     */
+    public static void loadProfile(final Context context,
+                                   final Map<String, String> params,
+                                   final RequestListener requestListener) {
+        String url = String.format("%s/loadProfile", URL_DEF);
+        StringRequest loadProfileAction = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (!isExpectedJson(response)) {
+                    requestListener.onError();
+                }
+
+                requestListener.onSucces(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                requestListener.onError();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return params;
+            }
+        };
+
+        loadProfileAction.setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIME,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        VolleySingelton.getInstance(context).addToRequestQueue(loadProfileAction);
     }
 
     private static boolean isExpectedJson(String response){

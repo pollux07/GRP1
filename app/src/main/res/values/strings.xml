@@ -125,4 +125,8 @@
     <string name="username">Nombre de usuario</string>
     <string name="confirm_password">Confirmar password</string>
     <string name="different_psw">El password no coinside</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="requirement">Completa los siguientes datos para terminar tu registro</string>
+    <string name="edit_profile_title_activity">Editar perfil</string>
+    <string name="profile">Perfil</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.leon.daniel.grp1;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,7 +9,9 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -18,17 +21,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.leon.daniel.grp1.Utils.Common;
 import com.leon.daniel.grp1.Utils.PsPagerAdapter;
 import com.leon.daniel.grp1.Utils.VolleySingelton;
+import com.leon.daniel.grp1.Utils.WebService;
 import com.rd.PageIndicatorView;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Context mCtx;
+    SwipeRefreshLayout mSwipeRefresh;
     ScrollView mScrollMain;
     PsPagerAdapter mPsPagerAdapter;
 
@@ -50,6 +62,8 @@ public class MainActivity extends AppCompatActivity
 
             startActivity(loginIntent);
             overridePendingTransition(0, 0);
+        } else {
+            loadProfile(userId);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -62,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //CONTENT ACTIVITY
+        mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.main_swipe);
         mScrollMain = (ScrollView) findViewById(R.id.main_scrollview);
         mScrollMain.setVisibility(View.VISIBLE);
         ViewPager viewPagerPromos = (ViewPager) findViewById(R.id.games_promo_vp);
@@ -185,6 +200,70 @@ public class MainActivity extends AppCompatActivity
             });
             layoutConsoles.addView(imageView);
         }
+
+
+        mSwipeRefresh.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimaryDark);
+        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSwipeRefresh.setRefreshing(true);
+                //TODO:agregar metodo de carga de imagienes
+            }
+        });
+    }
+
+    private void loadProfile(String userId) {
+        //TODO: add swiperefresh
+        Map<String, String> params = new HashMap<>();
+        params.put("user_id", userId);
+
+        WebService.loadProfile(mCtx, params, new WebService.RequestListener() {
+            @Override
+            public void onSucces(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    int code = jsonResponse.getInt("code");
+                    String status = jsonResponse.getString("status");
+
+                    if (code == Common.RESPONSE_OK && status.equals(Common.OK_STATUS)) {
+                        String name = jsonResponse.getString("name");
+                        if (null  == name) {
+                            providePersonalInfo();
+                        } else {
+                            Toast.makeText(mCtx, "Bienvenido", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    private void providePersonalInfo() {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mCtx);
+        alertBuilder.setMessage(getString(R.string.requirement));
+        alertBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        final AlertDialog dialog = alertBuilder.create();
+        dialog.show();
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent profileIntent = new Intent(mCtx, ProfileActivity.class);
+                startActivity(profileIntent);
+                dialog.dismiss();
+            }
+        });
     }
 
     private void infoGameAction(){
@@ -243,6 +322,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_share:
                 break;
             case R.id.nav_send:
+                break;
+            case R.id.logout:
+                Common.deletePreference(mCtx, Common.USER_ID);
+                startActivity(new Intent(mCtx, LoginActivity.class));
+                finish();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
