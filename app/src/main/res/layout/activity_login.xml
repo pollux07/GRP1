@@ -75,16 +75,14 @@
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/colorLightString">
 
-                <EditText
+                <AutoCompleteTextView
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
-                    android:textColor="@color/colorLightString"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
+                    android:imeActionId="@+id/login"
+                    android:textColor="@color/colorLightString"
                     android:maxLines="1"
                     tools:ignore="InvalidImeActionId" />
 

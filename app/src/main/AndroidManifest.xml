@@ -34,7 +34,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ProfileActivity"
-            android:label="@string/profile"/>
+            android:label="@string/profile" />
+        <activity android:name=".CredentialsActivity"></activity>
     </application>
 
 </manifest>

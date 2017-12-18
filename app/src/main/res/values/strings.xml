@@ -129,4 +129,6 @@
     <string name="requirement">Completa los siguientes datos para terminar tu registro</string>
     <string name="edit_profile_title_activity">Editar perfil</string>
     <string name="profile">Perfil</string>
+    <string name="update_info_action">Actualizar</string>
+    <string name="password">Contraseña</string>
 </resources>

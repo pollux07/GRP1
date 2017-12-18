@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     // UI references.
     private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
+    private AutoCompleteTextView mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setText(Common.getPreference(mCtx, Common.USER_EMAIL, null));
         }
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = (AutoCompleteTextView) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {

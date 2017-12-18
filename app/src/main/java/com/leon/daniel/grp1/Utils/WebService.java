@@ -143,6 +143,42 @@ public class WebService {
         VolleySingelton.getInstance(context).addToRequestQueue(loadProfileAction);
     }
 
+    /**
+     * Método que realiza la actualizacion del perfil del usuario
+     * @param context contexto de la actividad que lo esta mandando a llamar.
+     * @param params parametros que se enviaran al web service (datos del usuario).
+     * @param requestListener el resultado que nos arroja el web service.
+     */
+    public static void sendUserInfo(final Context context,
+                                    final Map<String, String> params,
+                                    final RequestListener requestListener) {
+        String url = String.format("%s/updateUserProfile", URL_DEF);
+        StringRequest sendUserInfoAction = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (!isExpectedJson(response)) {
+                    requestListener.onError();
+                }
+
+                requestListener.onSucces(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                requestListener.onError();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return params;
+            }
+        };
+
+        sendUserInfoAction.setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIME,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        VolleySingelton.getInstance(context).addToRequestQueue(sendUserInfoAction);
+    }
+
     private static boolean isExpectedJson(String response){
         try {
             JSONObject jsonResponse = new JSONObject(response);
