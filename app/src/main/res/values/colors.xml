@@ -7,4 +7,5 @@
     <color name="colorPrimaryString">#212121</color>
     <color name="colorScondaryString">#757575</color>
     <color name="colorLightString">#FFFFFF</color>
+    <color name="colorImageProfile">#ababab</color>
 </resources>

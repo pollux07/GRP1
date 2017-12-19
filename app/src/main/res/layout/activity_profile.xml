@@ -11,6 +11,15 @@
         tools:context="com.leon.daniel.grp1.ProfileActivity"
         android:padding="@dimen/activity_horizontal_margin"
         android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/iv_profile_picture"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/profile_image_shape"
+            android:contentDescription="@string/profile_image"/>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
