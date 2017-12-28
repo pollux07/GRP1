@@ -74,13 +74,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mCtx = this;
         VolleySingelton.getInstance(getApplicationContext());
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.usermail);
+        mEmailView = findViewById(R.id.usermail);
 
         if (null != Common.getPreference(mCtx, Common.USER_EMAIL, null)) {
             mEmailView.setText(Common.getPreference(mCtx, Common.USER_EMAIL, null));
         }
 
-        mPasswordView = (AutoCompleteTextView) findViewById(R.id.password);
+        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        TextView registrationTv = (TextView) findViewById(R.id.registration);
+        TextView registrationTv = findViewById(R.id.registration);
         registrationTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         registrationTv.setOnClickListener(new OnClickListener() {
             @Override
@@ -138,10 +138,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         final AlertDialog dialog = alertBuilder.create();
         dialog.show();
-        final TextInputEditText emailEt = (TextInputEditText) dialog.findViewById(R.id.et_email);
-        final TextInputEditText passEt = (TextInputEditText) dialog.findViewById(R.id.et_psw);
-        TextInputEditText confirmPswEt = (TextInputEditText) dialog.findViewById(R.id.et_confirm_psw);
-        Button registerBtn = (Button) dialog.findViewById(R.id.btn_register);
+        final TextInputEditText emailEt = dialog.findViewById(R.id.et_email);
+        final TextInputEditText passEt = dialog.findViewById(R.id.et_psw);
+        TextInputEditText confirmPswEt = dialog.findViewById(R.id.et_confirm_psw);
+        Button registerBtn = dialog.findViewById(R.id.btn_register);
         assert emailEt != null;
         assert passEt != null;
         assert confirmPswEt != null;

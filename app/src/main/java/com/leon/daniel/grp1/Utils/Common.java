@@ -2,6 +2,17 @@ package com.leon.daniel.grp1.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.RECEIVE_BOOT_COMPLETED;
+import static android.Manifest.permission.VIBRATE;
+import static android.Manifest.permission.WAKE_LOCK;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 /**
  * Creado por Pollux.
@@ -21,6 +32,9 @@ public class Common {
     //SHARED
     public static final String USER_EMAIL = "usermail";
     public static final String USER_ID = "user_id";
+
+    //PERMISSIONS
+    public static final int PERMISSION_REQUEST_CODE = 200;
 
     public static void putPreference(Context context, String key, String value) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(LOG_TAG,
@@ -42,5 +56,13 @@ public class Common {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.remove(key);
         edit.apply();
+    }
+
+    public static boolean checkExternalStoragePermission(Context context) {
+
+        int result = ContextCompat.checkSelfPermission(context,
+                WRITE_EXTERNAL_STORAGE);
+
+        return result == PackageManager.PERMISSION_GRANTED;
     }
 }

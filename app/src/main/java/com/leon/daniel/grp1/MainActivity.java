@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,8 +51,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         VolleySingelton.getInstance(getApplicationContext());
         mCtx = this;
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mSwipeRefresh = findViewById(R.id.main_swipe);
 
         String userId = Common.getPreference(mCtx, Common.USER_ID, null);
         if (null == userId) {
@@ -66,21 +68,20 @@ public class MainActivity extends AppCompatActivity
             loadProfile(userId);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //CONTENT ACTIVITY
-        mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.main_swipe);
-        mScrollMain = (ScrollView) findViewById(R.id.main_scrollview);
+        mScrollMain = findViewById(R.id.main_scrollview);
         mScrollMain.setVisibility(View.VISIBLE);
-        ViewPager viewPagerPromos = (ViewPager) findViewById(R.id.games_promo_vp);
-        PageIndicatorView pageIndicator = (PageIndicatorView) findViewById(R.id.page_inidcater_promo);
+        ViewPager viewPagerPromos = findViewById(R.id.games_promo_vp);
+        PageIndicatorView pageIndicator = findViewById(R.id.page_inidcater_promo);
 
         int[] promGames = new int[] {R.drawable.resident_evil7_gold_edition_promo,
                 R.drawable.spiderman_promo, R.drawable.days_gone_promo_ps4,
@@ -106,9 +107,9 @@ public class MainActivity extends AppCompatActivity
 
         pageIndicator.setViewPager(viewPagerPromos);
 
-        TextView psTitle = (TextView) findViewById(R.id.tv_ps_title);
+        TextView psTitle = findViewById(R.id.tv_ps_title);
         psTitle.setText(getString(R.string.ps_title));
-        LinearLayout layoutPs = (LinearLayout) findViewById(R.id.linear_ps);
+        LinearLayout layoutPs = findViewById(R.id.linear_ps);
         for (int i = 0; i < gamesPs.length; i++) {
             ImageView imageView = new ImageView(this);
             imageView.setId(i);
@@ -125,9 +126,9 @@ public class MainActivity extends AppCompatActivity
             layoutPs.addView(imageView);
         }
 
-        TextView xbTitle = (TextView) findViewById(R.id.tv_xb_title);
+        TextView xbTitle = findViewById(R.id.tv_xb_title);
         xbTitle.setText(getString(R.string.xb_title));
-        LinearLayout layoutXb = (LinearLayout) findViewById(R.id.linear_xb);
+        LinearLayout layoutXb = findViewById(R.id.linear_xb);
         for (int i = 0; i < gamesXb.length; i++) {
             ImageView imageView = new ImageView(this);
             imageView.setId(i);
@@ -144,9 +145,9 @@ public class MainActivity extends AppCompatActivity
             layoutXb.addView(imageView);
         }
 
-        TextView switchTitle = (TextView) findViewById(R.id.tv_nintendo_title);
+        TextView switchTitle = findViewById(R.id.tv_nintendo_title);
         switchTitle.setText(getString(R.string.nintendo_title));
-        LinearLayout layoutNintendo = (LinearLayout) findViewById(R.id.linear_nintendo);
+        LinearLayout layoutNintendo = findViewById(R.id.linear_nintendo);
         for (int i = 0; i < gamesSwitch.length; i++) {
             ImageView imageView = new ImageView(this);
             imageView.setId(i);
@@ -163,9 +164,9 @@ public class MainActivity extends AppCompatActivity
             layoutNintendo.addView(imageView);
         }
 
-        TextView nPortableTitle = (TextView) findViewById(R.id.tv_nportable_title);
+        TextView nPortableTitle = findViewById(R.id.tv_nportable_title);
         nPortableTitle.setText(getString(R.string.nin_portable));
-        LinearLayout layoutPortableN = (LinearLayout) findViewById(R.id.linear_nportable);
+        LinearLayout layoutPortableN = findViewById(R.id.linear_nportable);
         for (int i = 0; i < gamesNPortable.length; i++) {
             ImageView imageView = new ImageView(this);
             imageView.setId(i);
@@ -182,9 +183,9 @@ public class MainActivity extends AppCompatActivity
             layoutPortableN.addView(imageView);
         }
 
-        TextView consolesTitle = (TextView) findViewById(R.id.tv_consoles_title);
+        TextView consolesTitle = findViewById(R.id.tv_consoles_title);
         consolesTitle.setText(getString(R.string.consoles_title));
-        LinearLayout layoutConsoles = (LinearLayout) findViewById(R.id.linear_consoles);
+        LinearLayout layoutConsoles = findViewById(R.id.linear_consoles);
         for (int i = 0; i < gamesConsoles.length; i++) {
             ImageView imageView = new ImageView(this);
             imageView.setId(i);
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadProfile(String userId) {
-        //TODO: add swiperefresh
+        mSwipeRefresh.setRefreshing(true);
         Map<String, String> params = new HashMap<>();
         params.put("user_id", userId);
 
@@ -227,20 +228,25 @@ public class MainActivity extends AppCompatActivity
 
                     if (code == Common.RESPONSE_OK && status.equals(Common.OK_STATUS)) {
                         String name = jsonResponse.getString("name");
-                        if (null  == name) {
+                        Log.d(Common.LOG_TAG, "NOMBRE RECIBIDO" + name);
+                        if (name.equals("null")) {
                             providePersonalInfo();
+                            mSwipeRefresh.setRefreshing(false);
                         } else {
                             Toast.makeText(mCtx, "Bienvenido", Toast.LENGTH_SHORT).show();
+                            mSwipeRefresh.setRefreshing(false);
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(mCtx, "Error de comunicaciones", Toast.LENGTH_SHORT).show();
+                    mSwipeRefresh.setRefreshing(false);
                 }
             }
 
             @Override
             public void onError() {
-
+                Toast.makeText(mCtx, "Error de comunicaciones", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -274,7 +280,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -330,7 +336,7 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

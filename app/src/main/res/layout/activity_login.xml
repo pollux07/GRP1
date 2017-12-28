@@ -13,7 +13,6 @@
     tools:context="com.leon.daniel.grp1.LoginActivity">
 
     <!-- Login progress -->
-
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -22,19 +21,16 @@
         android:layout_marginTop="250dp"
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
-
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="70dp">
-
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <android.support.v7.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,12 +49,10 @@
                     android:textSize="40sp"
                     android:textStyle="bold" />
             </android.support.v7.widget.CardView>
-
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/colorLightString">
-
                 <AutoCompleteTextView
                     android:id="@+id/usermail"
                     android:layout_width="match_parent"
@@ -67,14 +61,11 @@
                     android:inputType="textEmailAddress"
                     android:textColor="@color/colorLightString"
                     android:maxLines="1"/>
-
             </android.support.design.widget.TextInputLayout>
-
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/colorLightString">
-
                 <AutoCompleteTextView
                     android:id="@+id/password"
                     android:layout_width="match_parent"
@@ -85,19 +76,19 @@
                     android:textColor="@color/colorLightString"
                     android:maxLines="1"
                     tools:ignore="InvalidImeActionId" />
-
             </android.support.design.widget.TextInputLayout>
-
             <Button
                 android:id="@+id/email_sign_in_button"
                 style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="45dp"
-                android:background="@color/colorAccent"
+                android:layout_marginBottom="@dimen/raised_margin_bottom"
+                android:layout_gravity="center"
                 android:text="@string/action_accept"
                 android:textColor="@color/colorLightString"
                 android:textStyle="bold"
+                android:background="@drawable/button_rounded_buttons"
                 android:elevation="2dp"/>
             <TextView
                 android:id="@+id/registration"
@@ -109,7 +100,6 @@
                 android:textColor="@color/colorLightString"
                 android:autoLink="all"
                 android:textSize="14sp"/>
-
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
